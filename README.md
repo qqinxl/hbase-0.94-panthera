@@ -67,10 +67,10 @@ Finally, the chart below compares the performance of selecting various numbers o
 
 `select count (col1, clo2, …, clon) from table`
 
-and DOT achieves up-to 2x speedup.
+and DOT achieves up-to 1.8x speedup.
 
 <img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/select_performance1.jpg" alt="Select Performance" width="315" height="180" />
 <img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/select_performance2.jpg" alt="Select Performance" width="315" height="180" />
    
 #### Summary ####
-The document store on HBase greatly improves the query processing capabilities on HBase (e.g., ~3x storage reduction and ~2x query speedup). We will contribute the implementation of DOT to the Apache Hadoop community under Project Panthera (<https://github.com/intel-hadoop/project-panthera>). Please also refer to [HBase-6800](http://issues.apache.org/jira/browse/HBase-6800) that tracks our efforts to collaborate with the Hadoop community to get the idea reviewed and hopefully incorporated into Apache HBase.
+The document store on HBase greatly improves the query processing capabilities on HBase (e.g., ~3x storage reduction and ~1.8x query speedup). We will contribute the implementation of DOT to the Apache Hadoop community under Project Panthera (<https://github.com/intel-hadoop/project-panthera>). Please also refer to [HBase-6800](http://issues.apache.org/jira/browse/HBase-6800) that tracks our efforts to collaborate with the Hadoop community to get the idea reviewed and hopefully incorporated into Apache HBase.
