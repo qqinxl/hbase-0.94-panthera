@@ -16,9 +16,9 @@ Initially, these systems typically store their data in HDFS, a high throughput b
 
 HBase is an open source implementation of BigTable, which provides very flexible schema support, and very low latency get/put of individual cells in the table. While HBase already has very effective MapReduce integration with its good scanning performance, query processing using MapReduce on HBase still has significant gaps compared to query processing on HDFS.
 
-* *Space overheads*. To provide flexible schema support, physically HBase stores its table as a multi-dimensional map, where each cell (except the row key) is stored on disk as a key-value pair: (row_id, family:column, timestamp)  cell. On the other hand, a Hive table has a fixed relational model, and consequently HBase can introduce large space overheads (sometimes as large as 3x) compared to storing the same table in HDFS.
+* *Space overheads*. To provide flexible schema support, physically HBase stores its table as a multi-dimensional map, where each cell (except the row key) is stored on disk as a key-value pair: *(row_id, family:column, timestamp) -> cell*. On the other hand, a Hive table has a fixed relational model, and consequently HBase can introduce large space overheads (sometimes as large as 3x) compared to storing the same table in HDFS.
 
-* *Query performance*. Query processing on HBase can be much (sometimes 3~5x) slower than that on HDFS due to various reasons. One of the reason is related to how HBase handles data accesses – HBase provides very good support for high concurrent read/write accesses; consequently, one needs to pay some amount of overheads (e.g., concurrency control) for each column read. On the other hand, data accesses in analytical query processing are predominantly read (with some append), and should preferably avoid the column read overheads.
+* *Query performance*. Query processing on HBase can be much (sometimes 3~5x) slower than that on HDFS due to various reasons. One of the reason is related to how HBase handles data accesses – HBase provides very good support for highly concurrent read/write accesses; consequently, one needs to pay some amount of overheads (e.g., concurrency control) for each column read. On the other hand, data accesses in analytical query processing are predominantly read (with some append), and should preferably avoid the column read overheads.
 
 #### A document store on HBase ####
 
@@ -59,15 +59,15 @@ To evaluate the improvements of MapReduce based query processing brought by DOT,
 </tr>
 </table>
 
-Next, the charts below compare the performance of loading data into the table using either bulk load or insert; and DOT can achieve ~1.9x speedup for bulk load and 3~4x speedup for insert.
+Next, the charts below compares the performance of loading data into the table (lower is better) using either bulk load or insert; and DOT can achieve ~1.9x speedup for bulk load and 3~4x speedup for insert.
 
 <img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/load_performance.jpg" alt="Data Load Performance" width="363" height="213" />
 
-Finally, the chart below compares the performance of selecting various numbers of columns form the table:
+Finally, the chart below compares the performance of selecting various numbers of columns form the table (lower is better):
 
 `select count (col1, clo2, …, clon) from table`
 
-and DOT achieves up-to 1.8x speedup.
+and DOT can achieve up-to 1.8x speedup.
 
 <img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/select_performance1.jpg" alt="Select Performance" width="315" height="180" />
 <img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/select_performance2.jpg" alt="Select Performance" width="315" height="180" />
