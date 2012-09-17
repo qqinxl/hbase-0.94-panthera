@@ -34,7 +34,7 @@ We have implemented DOT using HBase co-processors. When creating a DOT, the user
 
 #### Experimental results ####
 
-To evaluate the improvements of MapReduce based query processing brought by DOT, we created an 18-column in Hive (on HBase) and load ~567 million rows into the table. The table below compares sizes of the resulting tables; DOT achieves ~3x space reduction compared to normal HBase tables, and ~1.7x reduction compared to fast-diff ([HBase-4218](https://issues.apache.org/jira/browse/HBASE-4218)) encoded tables.
+To evaluate the improvements of MapReduce based query processing brought by DOT, we created an 18-column in Hive (on HBase) and load ~567 million rows into the table. The table below compares sizes of the resulting tables; DOT can achieve ~3x space reduction compared to normal HBase tables, and ~1.7x reduction compared to fast-diff ([HBase-4218](https://issues.apache.org/jira/browse/HBASE-4218)) encoded tables.
 
 <table border="1">
 <tr>
@@ -59,7 +59,7 @@ To evaluate the improvements of MapReduce based query processing brought by DOT,
 </tr>
 </table>
 
-Next, the chart below compares the performance of loading data into the table using either bulk load or insert; and DOT achieves ~1.9x speedup for bulk load and 3~4x speedup for insert.
+Next, the charts below compare the performance of loading data into the table using either bulk load or insert; and DOT can achieve ~1.9x speedup for bulk load and 3~4x speedup for insert.
 
 <img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/load_performance.jpg" alt="Data Load Performance" width="363" height="213" />
 
@@ -72,5 +72,5 @@ and DOT achieves up-to 2x speedup.
 <img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/select_performance1.jpg" alt="Select Performance" width="315" height="180" />
 <img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/select_performance2.jpg" alt="Select Performance" width="315" height="180" />
    
-Summary
-The document store on HBase greatly improves the query processing capabilities on HBase (e.g., ~3x storage reduction and ~2x query speedup). We will contribute the implementation of DOT to the Apache Hadoop community under Project Panthera (<https://github.com/intel-hadoop/project-panthera>). Please refer to [HBase-6800](http://issues.apache.org/jira/browse/HBase-6800) to track our efforts to collaborate with the Hadoop community to get the idea reviewed and hopefully incorporated into Apache HBase.
+#### Summary ####
+The document store on HBase greatly improves the query processing capabilities on HBase (e.g., ~3x storage reduction and ~2x query speedup). We will contribute the implementation of DOT to the Apache Hadoop community under Project Panthera (<https://github.com/intel-hadoop/project-panthera>). Please also refer to [HBase-6800](http://issues.apache.org/jira/browse/HBase-6800) that tracks our efforts to collaborate with the Hadoop community to get the idea reviewed and hopefully incorporated into Apache HBase.
