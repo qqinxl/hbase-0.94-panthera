@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# HBASE_HOME
+HBASE_HOME=${HBASE_HOME:-/home/Grace/hbase-0.94.0};
+HADOOP_HOME=${HADOOP_HOME:-/home/Grace/hadoop};
+
+###########################################################
+# variables
+###########################################################
+HIVE_TABLE_NAME=t01_party_card_rela_h;
+HBASE_TABLE_NAME=test_table;
+HIVE_WAREHOUSE_FOLDER=/user/hive/warehouse;
+BULKLOAD_FOLDER=/user/Grace/bulkload;
+COLUMN_MAPPING='f:party_id,HBASE_ROW_KEY,d.party_card_rela_type_cd,f:start_date,f:end_date,f:etl_job,f:etl_src,f:source_system_cust_num'
+DELIMTER='|'
+REGION_START_POINTS_FILE='/user/Grace/t01_part'
+IMPORT_TSV_MAPPER_CLASS="org.apache.hadoop.hbase.mapreduce.TsvImporterMapper"
+INPUT_TEXT_FORMAT="org.apache.hadoop.mapreduce.lib.input.TextInputFormat"
+REDUCE_NUM_HINT=100;
+
+###########################################################
+# 1. Dump the Region split points for an existing HTable
+###########################################################
+$HBASE_HOME/bin/hbase  org.apache.hadoop.hbase.dot.util.DumpSplitPoints -t $HIVE_TABLE_NAME $REGION_START_POINTS_FILE
+#TODO: if there is no REGION_START_POINTS_FILE generated, won't add -partitionHintFile $REGION_START_POINTS_FILE below
+
+###########################################################
+# 2. Sampling the input table to get the fine-grained TotalOrderedPartitionFile
+###########################################################
+# Generic options
+DELIMTER_BASE64=`echo $DELIMTER|base64`
+GENERIC_OPTIONS=" -Dimporttsv.skip.bad.lines=false -Dimporttsv.columns=$COLUMN_MAPPING -Dimporttsv.separator=$DELIMTER_BASE64 "
+# Generate TotolOrderedPartitionFile
+$HBASE_HOME/bin/hbase org.apache.hadoop.hbase.mapreduce.hadoopbackport.InputSampler \
+	$GENERIC_OPTIONS \
+	-r 100 \
+	-partitionHintFile $REGION_START_POINTS_FILE \
+	-MapperClass $IMPORT_TSV_MAPPER_CLASS \
+	-inFormat $INPUT_TEXT_FORMAT \
+	-keyClass org.apache.hadoop.hbase.io.ImmutableBytesWritable \
+	$HIVE_WAREHOUSE_FOLDER/$HIVE_TABLE_NAME ./;
+	
+#TODO: if there is no HBASE_TABLE exists, create a table with _partition.lst file
+#$HADOOP_HOME/bin/hadoop jar $HBASE_HOME/lib/dot-0.1.jar org.apache.hadoop.hbase.dot.util.PreSplitTable ${HBASE_TABLE_NAME}
+###########################################################
+# 3. Import data into HFile in a parallel mode
+###########################################################
+$HADOOP_HOME/bin/hadoop jar $HBASE_HOME/hbase-0.94.0.jar importtsv -Dimporttsv.separator=$DELIMTER -Dimporttsv.columns=$COLUMN_MAPPING  -Dimporttsv.bulk.output=$BULKLOAD_FOLDER/$HBASE_TABLE_NAME $HBASE_TABLE_NAME $HIVE_WAREHOUSE_FOLDER/$HIVE_TABLE_NAME
+
+###########################################################
+# 4. Complete bulkload
+###########################################################
+$HADOOP_HOME/bin/hadoop jar $HBASE_HOME/hbase-0.94.0.jar completebulkload $BULKLOAD_FOLDER/$HBASE_TABLE_NAME;
