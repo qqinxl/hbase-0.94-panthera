@@ -24,7 +24,7 @@ HBase is an open source implementation of BigTable, which provides very flexible
 
 We have implemented a *document store* on HBase, which greatly improve query processing on HBase by leveraging the relational model and read-mostly access patterns. The figure below illustrates the data model of the document store.
 
-<img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/datamodel.jpg" alt="DOT Data Model" width="436" height="180" />
+<img src="http://cloud.github.com/downloads/intel-hadoop/hbase-0.94-panthera/datamodel.jpg" alt="DOT Data Model" width="436" height="180" />
 
 In the document store, a table can be declared as a *document-oriented table* (DOT) at the table creation time. Each row in DOT contains, in addition to the *row key*, a collection of documents (doc), and each document contains a collection of *fields*; in query processing, each column in a relational table is simply mapped to a field in some document.
 
@@ -61,7 +61,7 @@ To evaluate the improvements of MapReduce based query processing brought by DOT,
 
 Next, the charts below compares the performance of loading data into the table (lower is better) using either bulk load or insert; and DOT can achieve ~1.9x speedup for bulk load and 3~4x speedup for insert.
 
-<img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/load_performance.jpg" alt="Data Load Performance" width="363" height="213" />
+<img src="http://cloud.github.com/downloads/intel-hadoop/hbase-0.94-panthera/load_performance.jpg" alt="Data Load Performance" width="363" height="213" />
 
 Finally, the chart below compares the performance of selecting various numbers of columns form the table (lower is better):
 
@@ -69,8 +69,8 @@ Finally, the chart below compares the performance of selecting various numbers o
 
 and DOT can achieve up-to 1.8x speedup.
 
-<img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/select_performance1.jpg" alt="Select Performance" width="315" height="180" />
-<img src="https://raw.github.com/intel-hadoop/hbase-0.94-panthera/master/images/select_performance2.jpg" alt="Select Performance" width="315" height="180" />
+<img src="http://cloud.github.com/downloads/intel-hadoop/hbase-0.94-panthera/select_performance1.jpg" alt="Select Performance" width="315" height="180" />
+<img src="http://cloud.github.com/downloads/intel-hadoop/hbase-0.94-panthera/select_performance2.jpg" alt="Select Performance" width="315" height="180" />
    
 #### Summary ####
 The document store on HBase greatly improves the query processing capabilities on HBase (e.g., ~3x storage reduction and ~1.8x query speedup). We will contribute the implementation of DOT to the Apache Hadoop community under Project Panthera (<https://github.com/intel-hadoop/project-panthera>). Please also refer to [HBase-6800](http://issues.apache.org/jira/browse/HBase-6800) that tracks our efforts to collaborate with the Hadoop community to get the idea reviewed and hopefully incorporated into Apache HBase.
