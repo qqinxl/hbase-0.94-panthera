@@ -968,6 +968,7 @@ public class DataManipulationOps extends BaseRegionObserver {
       kvs.clear();
     }
 
+    e.bypass();
     return true;
 
   }
@@ -994,6 +995,7 @@ public class DataManipulationOps extends BaseRegionObserver {
       // won't do any transform on the doc object
       returnedKV[0] = kv.clone();
       // bypass real transform
+      e.bypass();
       return true;
     }
     return false;
@@ -1013,10 +1015,13 @@ public class DataManipulationOps extends BaseRegionObserver {
       // TODO should not ignore the value part.
       newKV = KeyValue.createFirstOnRow(returnedKV.getBuffer(),
           returnedKV.getRowOffset(),
-          returnedKV.getRowOffset() + returnedKV.getRowLength(),
+          returnedKV.getRowLength(),
+          
           returnedKV.getBuffer(), returnedKV.getFamilyOffset(),
-          returnedKV.getFamilyOffset() + returnedKV.getFamilyLength(), df[0],
-          0, df[0].length);
+          returnedKV.getFamilyLength(), 
+          
+          df[0],0, 
+          df[0].length);
       return newKV;
     }
     return returnedKV;
@@ -1057,6 +1062,7 @@ public class DataManipulationOps extends BaseRegionObserver {
       r = getFilterKeyValueDecision(fieldlist, kv, filter, docObject, r, e
           .getEnvironment().getConfiguration());
       // bypass the real filterKeyValue()
+      e.bypass();
       return true;
     }
     return false;
